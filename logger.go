@@ -8,7 +8,7 @@ import "log"
 
 type Logger interface {
 	Error(v ...interface{})
-	Debug(v ...interface{})
+	// Debug(v ...interface{})
 	Info(v ...interface{})
 }
 
@@ -26,9 +26,11 @@ func (d defaultLogger) Error(v ...interface{}) {
 }
 
 //
+/*
 func (d defaultLogger) Debug(v ...interface{}) {
 	log.Printf("Debug: %v \n", v)
 }
+*/
 
 //
 func (d defaultLogger) Info(v ...interface{}) {

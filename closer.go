@@ -34,7 +34,7 @@ func init() {
 func NewCloser() *Closer {
 	return &Closer{
 		mu:      &sync.RWMutex{},
-		timeout: 1 * time.Second,
+		timeout: 20 * time.Second,
 		log:     DefaultLogger(),
 		actions: make(map[string]Action),
 	}
