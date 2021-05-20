@@ -29,7 +29,7 @@ func (c *Postgre) Close() {
 	time.Sleep(2 * time.Second)
 }
 
-// Функция с произвольнын наименованием
+// Функция с произвольным наименованием
 func (c *Cache) Clear() {
 	time.Sleep(2 * time.Second)
 	fmt.Println("cache close")
