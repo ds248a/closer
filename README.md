@@ -88,23 +88,3 @@ func main() {
   c.ListenSignal(syscall.SIGTERM)
 }
 ```
-
-### Logger
-
-Возможность работы в различными Лог Пакетами
-
-```go
-import (
-	"github.com/ds248a/closer"
-  "github.com/rs/zerolog"
-)
-
-func main() {
-  logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
-  
-  c := closer.NewCloser()
-  c.SetLogger(logger)
-  
-  c.ListenSignal(syscall.SIGTERM)
-}
-```
