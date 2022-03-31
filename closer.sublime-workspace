@@ -159,6 +159,86 @@
 	},
 	"buffers":
 	[
+		{
+			"contents": "{\n  \"folders\": [ { \"path\": \".\" } ],\n  \"settings\": {\n    \n    \"LSP\": {\n      \"gopls\": {\n        \"enabled\": true,\n        \"env\": {\n          \"PATH\": \"/vlm/work/bin\",\n        }\n      },\n    },\n    \"lsp_format_on_save\": true,\n    \"show_references_in_quick_panel\": true,\n    \"log_debug\": true,\n    \"log_stderr\": true,\n\n    \"golang\": {\n      \"linux\": {\n        \"GO111MODULE\": \"auto\",\n        \"PATH\": \"/vlm/go/go117/bin\",\n        \"GOROOT\": \"/vlm/go/go117\",\n        \"GOPATH\": \"/vlm/fw/fw_go17\",\n        \"GOMODCACHE\":\"/vlm/fw/fw_go17/pkg/mod\",\n      },\n    },\n  },\n}",
+			"file": "closer.sublime-project",
+			"file_size": 45,
+			"file_write_time": 132928580610081202,
+			"settings":
+			{
+				"buffer_size": 557,
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					2,
+					1,
+					"paste",
+					null,
+					"AgAAAAAAAAAAAAAALQIAAAAAAAAAAAAALQIAAAAAAAAtAgAAAAAAAC0AAAB7CgkiZm9sZGVycyI6CglbCgkJewoJCQkicGF0aCI6ICIuIgoJCX0KCV0KfQo",
+					"AQAAAAAAAAABAAAAAAAAAAAAAAAtAAAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"file": ".gitignore",
+			"settings":
+			{
+				"buffer_size": 286,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					3,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AQAAAEYAAAAAAAAARwAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAARgAAAAAAAABGAAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					4,
+					1,
+					"insert",
+					{
+						"characters": "*."
+					},
+					"AgAAAEcAAAAAAAAASAAAAAAAAAAAAAAASAAAAAAAAABJAAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAARwAAAAAAAABHAAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					5,
+					1,
+					"paste",
+					null,
+					"AQAAAEkAAAAAAAAAWAAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAASQAAAAAAAABJAAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					6,
+					7,
+					"left_delete",
+					null,
+					"BwAAAFcAAAAAAAAAVwAAAAAAAAABAAAAdFYAAAAAAAAAVgAAAAAAAAABAAAAY1UAAAAAAAAAVQAAAAAAAAABAAAAZVQAAAAAAAAAVAAAAAAAAAABAAAAalMAAAAAAAAAUwAAAAAAAAABAAAAb1IAAAAAAAAAUgAAAAAAAAABAAAAclEAAAAAAAAAUQAAAAAAAAABAAAAcA",
+					"AQAAAAAAAAABAAAAWAAAAAAAAABYAAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					7,
+					1,
+					"insert",
+					{
+						"characters": "*"
+					},
+					"AQAAAFEAAAAAAAAAUgAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAUQAAAAAAAABRAAAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -323,6 +403,7 @@
 	],
 	"file_history":
 	[
+		"/vlm/work/src/closer/README.md",
 		"/vlm/fw/fw_go17/src/nami/main.go",
 		"/vlm/fw/fw_go17/src/nami/procmon/monitor/init.go",
 		"/vlm/fw/fw_go17/src/nami/procmon/ebpf/ebpf.go",
@@ -449,8 +530,7 @@
 		"/home/takelau/go/src/os/types.go",
 		"/home/takelau/go/src/os/file.go",
 		"/home/takelau/go/src/os/file_posix.go",
-		"/home/takelau/go/src/os/file_unix.go",
-		"/home/takelau/go/src/syscall/lsf_linux.go"
+		"/home/takelau/go/src/os/file_unix.go"
 	],
 	"find":
 	{
@@ -501,6 +581,69 @@
 		{
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "closer.sublime-project",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 557,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								128,
+								128
+							]
+						],
+						"settings":
+						{
+							"lsp_uri": "file:///vlm/work/src/closer/closer.sublime-project",
+							"syntax": "Packages/JSON/JSON.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": ".gitignore",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 286,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								82,
+								82
+							]
+						],
+						"settings":
+						{
+							"lsp_uri": "file:///vlm/work/src/closer/.gitignore",
+							"syntax": "Packages/Git Formats/Git Ignore.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				}
 			]
 		}
 	],
