@@ -5,8 +5,7 @@
 *.dll
 *.so
 *.dylib
-*.sublime-project
-*.sublime-workspace
+*.sublime*
 
 # Test binary, built with `go test -c`
 *.test
