@@ -1,12 +1,13 @@
 # closer
 
-Обработка функций прерывания основного процесса импортированных пакетов.
+Processing interrupt functions of the main process of imported packages.
 
-Поддержка различного формата функций завершения.
-Поддержка ключей слежения, реализующая возможность прекращения процесса отслеживания.
-Поддержка обработки ошибок функций завршения.
+Support for various format completion functions.
+Support for tracking keys, which implements the ability to stop the tracking process.
+Support for error handling of termination functions.
 
-### Основной функционал
+### Usage example
+
 ```go
 import (
   "fmt"
@@ -15,23 +16,23 @@ import (
   "github.com/ds248a/closer"
 )
 
-// Пример формата функций завершения основной оперции импортированного пакета
+// An example of functions for completing the main operation of an imported package
 type Redis struct {}
 type Postgre struct {}
 type Cache struct {}
 
-// 1. Функция возвращающает ошибку
+// 1. Value-returning functions
 func (c *Redis) Close() error {
   time.Sleep(2 * time.Second)
   return fmt.Errorf("%s", fmt.Sprintln("Redis err"))
 }
 
-// 2. Функция ничего не возвращает
+// 2. Void (nonvalue-returning) functions
 func (c *Postgre) Close() {
   time.Sleep(2 * time.Second)
 }
 
-// 3. Функция завершения с произвольным наименованием
+// 3. Function with unique name 
 func (c *Cache) Clear() {
   time.Sleep(2 * time.Second)
 }
@@ -41,19 +42,19 @@ func main() {
   pg := &Postgre{}
   rd := &Redis{}
 
-  // Ограничение по времени исполнения всем обработчикам
+  // Execution time limit for all handlers 
   closer.SetTimeout(10 * time.Second)
 
-  // Регистрация обработчика, с сохранением ключа
+  // Handler registration, with key saving 
   pKey := closer.Add(pg.Close)
 
-  // Простая регистрация обработчика, без сохранения ключа
+  // Simple handler registration, no key saving 
   closer.Add(cc.Clear)
 
-  // Отмена обработки (прерывание отслеживания) по ключу
+  // Cancel processing (interrupt tracking) by key 
   closer.Remove(pKey)
 
-  // Обработка ошибок на стороне приложения, с сохранением ключа
+  // Handling errors on the application side, with saving the key 
   rKey := closer.Add(func() {
     err := rd.Close()
     if err != nil {
@@ -64,16 +65,16 @@ func main() {
   // Out: c159f74d-8a6c-49fd-a181-83edc1d5d595
   fmt.Println(rKey)
 
-  // Сброс всех заданий на обработку
+  // Resetting all processing jobs 
   closer.Reset()
 
-  // Вызываться в самом конце функции 'main()'
+  // Called at the end of the main()
   closer.ListenSignal(syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
 }
 
 ```
 
-### Объектная и кроспакетная обработка
+### Object and cross-batch processing
 
 ```go
 import (
