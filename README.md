@@ -1,12 +1,14 @@
 # closer
 
-Processing interrupt functions of the main process of imported packages.
+Реализация корректного закрытия процессов импортированных пакетов по завершению работы приложения.
 
-Support for various format completion functions.
-Support for tracking keys, which implements the ability to stop the tracking process.
-Support for error handling of termination functions.
+Реализована поддержа:
+- обработки системных событий. По умолчанию обрабатываются: os.Interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT
+- конкурентный запуск процессов завершения с ограничением времени исполнения;
+- возможность пользовательской обработки картежей функций заврешения процесса;
+- доступ к обработчикам процесса завершения по ключу.
 
-### Usage example
+### Пример использования
 
 ```go
 import (
@@ -16,25 +18,25 @@ import (
   "github.com/ds248a/closer"
 )
 
-// An example of functions for completing the main operation of an imported package
+// Для примеры представлены структуры с разными форматами реализации функций завершения их процессов.
 type Redis struct {}
 type Postgre struct {}
 type Cache struct {}
 
-// 1. Value-returning functions
+// 1. Функция возвращает результат своей работы.
 func (c *Redis) Close() error {
-  time.Sleep(2 * time.Second)
+  time.Sleep(time.Second)
   return fmt.Errorf("%s", fmt.Sprintln("Redis err"))
 }
 
-// 2. Void (nonvalue-returning) functions
+// 2. Функция ничего не возвращает.
 func (c *Postgre) Close() {
-  time.Sleep(2 * time.Second)
+  time.Sleep(time.Second)
 }
 
-// 3. Function with unique name 
+// 3. Имеет произвольное наименование.
 func (c *Cache) Clear() {
-  time.Sleep(2 * time.Second)
+  time.Sleep(time.Second)
 }
 
 func main() {
@@ -42,19 +44,20 @@ func main() {
   pg := &Postgre{}
   rd := &Redis{}
 
-  // Execution time limit for all handlers 
+  // Ограничение времени исполнения всех зависимых процессов.
   closer.SetTimeout(10 * time.Second)
 
-  // Handler registration, with key saving 
+  // Регистрация функций завершения процессов в планировщике.
+  // Возвращает ключ, с поиощью которого возможно отменить обработчик.
   pKey := closer.Add(pg.Close)
 
-  // Simple handler registration, no key saving 
+  // Простая регистрация обработчика.
   closer.Add(cc.Clear)
 
-  // Cancel processing (interrupt tracking) by key 
+  // Отмена обработчика.
   closer.Remove(pKey)
 
-  // Handling errors on the application side, with saving the key 
+  // Пользовательская обработка ошибки исполнения.
   rKey := closer.Add(func() {
     err := rd.Close()
     if err != nil {
@@ -62,25 +65,21 @@ func main() {
     }
   })
 
-  // Out: c159f74d-8a6c-49fd-a181-83edc1d5d595
+  // Вывод: c159f74d-8a6c-49fd-a181-83edc1d5d595
   fmt.Println(rKey)
 
-  // Resetting all processing jobs 
+  // Удаление всех задач с планировщика.
   closer.Reset()
 
-  // Called at the end of the main()
+  // Запуск обработки системых вызовов.
   closer.ListenSignal(syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
 }
 
 ```
 
-### Object and cross-batch processing
+### Объектная и крос-пакетная обрабка
 
 ```go
-import (
-  "github.com/ds248a/closer"
-)
-
 func main() {
   c := closer.NewCloser()
   c.Add(cc.Clear)
