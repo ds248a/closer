@@ -8,8 +8,6 @@ import (
 	"runtime"
 	"sync"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 // ----------------------
@@ -24,7 +22,8 @@ type Closer struct {
 	mu      *sync.RWMutex
 	timeout time.Duration
 	log     Logger
-	actions map[string]Action
+	actions map[uint64]Action
+	cid     func() uint64
 }
 
 func init() {
@@ -36,7 +35,8 @@ func NewCloser() *Closer {
 		mu:      &sync.RWMutex{},
 		timeout: 20 * time.Second,
 		log:     DefaultLogger(),
-		actions: make(map[string]Action),
+		actions: make(map[uint64]Action),
+		cid:     uid(),
 	}
 }
 
@@ -64,17 +64,17 @@ func Close(s os.Signal) {
 }
 
 // Регистрация функции закрытия соединения или уничтожения объекта.
-func Add(f func()) string {
+func Add(f func()) uint64 {
 	return closer.Add(f)
 }
 
 // Возвращает полный список обрабтчиков.
-func Actions() map[string]Action {
+func Actions() map[uint64]Action {
 	return closer.Actions()
 }
 
 // Удаляет указанный обработчик из планировщика.
-func Remove(key string) Action {
+func Remove(key uint64) Action {
 	return closer.Remove(key)
 }
 
@@ -130,7 +130,7 @@ func (c *Closer) Close(s os.Signal) {
 
 // Добавление в планировщик пользовательской функции закрытия соединения или уничтожения объекта.
 // Функция возвращает ключ, по которому в дальнейшем возможно выполнить удаление обработчика из планировщика.
-func (c *Closer) Add(f func()) string {
+func (c *Closer) Add(f func()) uint64 {
 	key := c.callOnExit(func(ctx context.Context, wg *sync.WaitGroup, s os.Signal) {
 		defer wg.Done()
 
@@ -157,8 +157,8 @@ func (c *Closer) Add(f func()) string {
 
 // Регистрация обработчика пользовательской функции в плантровщике заданий.
 // Роль планировщика выполняет хеш вида map[string]Action.
-func (c *Closer) callOnExit(action Action) string {
-	key := uuid.New().String()
+func (c *Closer) callOnExit(action Action) uint64 {
+	key := c.cid()
 	c.mu.Lock()
 	c.actions[key] = action
 	c.mu.Unlock()
@@ -166,8 +166,8 @@ func (c *Closer) callOnExit(action Action) string {
 }
 
 // Возвращает полный список обрабтчиков.
-func (c *Closer) Actions() map[string]Action {
-	actions := make(map[string]Action)
+func (c *Closer) Actions() map[uint64]Action {
+	actions := make(map[uint64]Action)
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	for k, a := range c.actions {
@@ -177,7 +177,7 @@ func (c *Closer) Actions() map[string]Action {
 }
 
 // Удаляет указанный обработчик из планировщика.
-func (c *Closer) Remove(key string) Action {
+func (c *Closer) Remove(key uint64) Action {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if action, ok := c.actions[key]; ok {
@@ -193,7 +193,8 @@ func (c *Closer) Reset() {
 		return
 	}
 	c.mu.Lock()
-	c.actions = make(map[string]Action)
+	c.actions = make(map[uint64]Action)
+	c.cid = uid()
 	c.mu.Unlock()
 }
 
@@ -204,4 +205,13 @@ func funcName(i interface{}) (name string) {
 		return "not defined"
 	}
 	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
+}
+
+// Идентификатор обработчика
+func uid() func() uint64 {
+	var i uint64
+	return func() uint64 {
+		i++
+		return i
+	}
 }
